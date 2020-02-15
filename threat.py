@@ -38,7 +38,7 @@ threat_data = ImageDataBunch.from_name_re(
     threat_fnames,
     r"/([^/]+)_\d+.jpg$",
     ds_tfms=get_transforms(),
-    size=224,
+    size=224
 )
 threat_learner = cnn_learner(threat_data, models.resnet34)
 threat_learner.model.load_state_dict(
