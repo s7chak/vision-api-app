@@ -24,9 +24,9 @@ async def get_bytes(url):
 
 app = Starlette()
 
-threat_images_path = Path("/images")
+threat_images_path = Path("/tmp")
 threat_fnames = [
-    "{}_1.jpg".format(c)
+    "images/{}_1.jpg".format(c)
     for c in [
         "gun",
         "knife",
@@ -38,7 +38,7 @@ threat_data = ImageDataBunch.from_name_re(
     threat_fnames,
     r"/([^/]+)_\d+.jpg$",
     ds_tfms=get_transforms(),
-    size=224
+    size=224,
 )
 threat_learner = cnn_learner(threat_data, models.resnet34)
 threat_learner.model.load_state_dict(
