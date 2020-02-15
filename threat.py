@@ -26,7 +26,7 @@ app = Starlette()
 
 threat_images_path = Path("/tmp")
 threat_fnames = [
-    "images/{}_1.jpg".format(c)
+    "./images/{}_1.jpg".format(c)
     for c in [
         "gun",
         "knife",
