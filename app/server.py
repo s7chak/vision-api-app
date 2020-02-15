@@ -31,10 +31,12 @@ async def setup_learner():
     learn.load(model_file_name)
     return learn
 
-loop = asyncio.get_event_loop()
-tasks = [asyncio.ensure_future(setup_learner())]
-learn = loop.run_until_complete(asyncio.gather(*tasks))[0]
-loop.close()
+# loop = asyncio.get_event_loop()
+# tasks = [asyncio.ensure_future(setup_learner())]
+# learn = loop.run_until_complete(asyncio.gather(*tasks))[0]
+# loop.close()
+
+
 
 PREDICTION_FILE_SRC = path/'static'/'predictions.txt'
 
@@ -46,6 +48,8 @@ async def upload(request):
     return predict_from_bytes(bytes)
 
 def predict_from_bytes(bytes):
+    path = Path('../models')
+    learn = load_learner(path)
     img = open_image(BytesIO(bytes))
     _,_,losses = learn.predict(img)
     predictions = sorted(zip(classes, map(float, losses)), key=lambda p: p[1], reverse=True)
