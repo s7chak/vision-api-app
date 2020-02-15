@@ -24,7 +24,7 @@ async def get_bytes(url):
 
 app = Starlette()
 
-threat_images_path = Path("/tmp")
+threat_images_path = Path("/tmp/")
 threat_fnames = [
     "images/{}_1.jpg".format(c)
     for c in [
