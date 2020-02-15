@@ -1,16 +1,23 @@
 FROM python:3.6-slim-stretch
 
-RUN apt-get update && apt-get install -y python3-dev gcc \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt update
+RUN apt install -y python3-dev gcc
 
-ADD requirements.txt .
+# Install pytorch and fastai
+RUN pip install torch_nightly -f https://download.pytorch.org/whl/nightly/cpu/torch_nightly.html
+RUN pip install fastai
 
-RUN pip install --no-cache-dir -r requirements.txt
+# Install starlette and uvicorn
+RUN pip install starlette uvicorn python-multipart aiohttp
+RUN pip install python-multipart
 
-COPY app app/
+ADD threat.py threat.py
+ADD threat_model.pth usa-inaturalist-cats.pth
 
-RUN python app/server.py
+# Run it once to trigger resnet download
+RUN python threat.py
 
-EXPOSE 8080
+EXPOSE 8008
 
-CMD ["python", "app/server.py", "serve"]
+# Start the server
+CMD ["python", "threat.py", "serve"]
