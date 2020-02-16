@@ -51,7 +51,7 @@ threat_data = ImageDataBunch.single_from_classes(path, classes, ds_tfms=get_tran
 
 threat_learner = cnn_learner(threat_data, models.resnet34)
 threat_learner.model.load_state_dict(
-    torch.load("threat_model.pth", map_location="cpu")['model']
+    torch.load("models/threat_model.pth", map_location="cpu")['model']
 )
 
 
