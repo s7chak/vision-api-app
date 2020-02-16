@@ -16,7 +16,7 @@ ADD threat.py threat.py
 # Run it once to trigger resnet download
 RUN python threat.py
 
-EXPOSE 8008
+EXPOSE 8080
 
 # Start the server
 CMD ["python", "threat.py", "serve"]
