@@ -12,7 +12,7 @@ RUN pip install starlette uvicorn python-multipart aiohttp
 RUN pip install python-multipart
 
 ADD threat.py threat.py
-ADD threat_model.pth threat_model.pth
+ADD models/threat_model.pth models/threat_model.pth
 
 # Run it once to trigger resnet download
 RUN python threat.py
