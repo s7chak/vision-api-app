@@ -1,12 +1,6 @@
 from starlette.applications import Starlette
 from starlette.responses import JSONResponse, HTMLResponse, RedirectResponse
-from fastai.vision import (
-    ImageDataBunch,
-    cnn_learner,
-    open_image,
-    get_transforms,
-    models,
-)
+from fastai.vision import *
 import torch
 from pathlib import Path
 from io import BytesIO
@@ -24,6 +18,7 @@ async def get_bytes(url):
 
 app = Starlette()
 
+path = Path(__file__).parent
 threat_images_path = Path("/tmp")
 threat_fnames = [
     "images/{}_1.jpg".format(c)
@@ -33,17 +28,22 @@ threat_fnames = [
         "bomb"
     ]
 ]
-threat_data = ImageDataBunch.from_name_re(
-    threat_images_path,
-    threat_fnames,
-    r"/([^/]+)_\d+.jpg$",
-    ds_tfms=get_transforms(),
-    size=224,
-)
+classes = ['gun','knife','bomb']
+model_file_name='threat_model'
+
+threat_data = ImageDataBunch.single_from_classes(path, classes, ds_tfms=get_transforms(), size=150).normalize(imagenet_stats)
+# from_name_re(
+#     threat_images_path,
+#     threat_fnames,
+#     r"/([^/]+)_\d+.jpg$",
+#     ds_tfms=get_transforms(),
+#     size=224,
+# )
 threat_learner = cnn_learner(threat_data, models.resnet34)
-threat_learner.model.load_state_dict(
-    torch.load("threat_model.pth", map_location="cpu")['model']
-)
+threat_learner.load(model_file_name)
+# threat_learner.model.load_state_dict(
+#     torch.load("threat_model.pth", map_location="cpu")['model']
+# )
 
 
 @app.route("/upload", methods=["POST"])
@@ -61,29 +61,31 @@ async def classify_url(request):
 
 def predict_image_from_bytes(bytes):
     img = open_image(BytesIO(bytes))
-    _,_,losses = threat_learner.predict(img)
+    _,class_,losses = threat_learner.predict(img)
+
+    print({
+        "prediction": classes[class_.item()],
+        "scores": sorted(
+            zip(threat_learner.data.classes, map(float, losses)),
+            key=lambda p: p[1],
+            reverse=True
+        )
+    })
 
     prediction=sorted(
             zip(threat_learner.data.classes, map(float, losses)),
-            key=lambda p: p[1],
-            reverse=True)
+            key=lambda p: p[1])
     
+    print(prediction)
     return HTMLResponse(
         """ <h1>It's a """+prediction[0][0]+"""</h1>""")
-
-    # return JSONResponse({
-    #     "predictions": sorted(
-    #         zip(threat_learner.data.classes, map(float, losses)),
-    #         key=lambda p: p[1],
-    #         reverse=True
-    #     )
-    # })
 
 
 @app.route("/")
 def form(request):
     return HTMLResponse(
         """
+        <h2>Threat Object Detector<h2>
         <form action="/upload" method="post" enctype="multipart/form-data">
             Select image to upload:
             <input type="file" name="file">
