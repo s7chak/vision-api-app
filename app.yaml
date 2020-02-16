@@ -1,5 +1,5 @@
-runtime: custom
-env: flex
+runtime: python37
+env: standard
 
 resources:
   cpu: 2

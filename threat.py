@@ -49,12 +49,13 @@ threat_data = ImageDataBunch.single_from_classes(path, classes, ds_tfms=get_tran
 # )
 
 
-threat_learner = cnn_learner(threat_data, models.resnet34)
-threat_learner.model.load_state_dict(
-    torch.load("models/threat_model.pth", map_location="cpu")['model']
-)
+# threat_learner = cnn_learner(threat_data, models.resnet34)
+# threat_learner.model.load_state_dict(
+#     torch.load("models/threat_model.pth", map_location="cpu")['model']
+# )
 
 
+threat_learner=load_learner('.')
 
 @app.route("/upload", methods=["POST"])
 async def upload(request):
@@ -67,6 +68,7 @@ async def upload(request):
 async def classify_url(request):
     bytes = await get_bytes(request.query_params["url"])
     return predict_image_from_bytes(bytes)
+
 
 def predict_image_from_bytes(bytes):
     img = open_image(BytesIO(bytes))

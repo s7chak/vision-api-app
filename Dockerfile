@@ -11,7 +11,7 @@ RUN pip install fastai
 RUN pip install starlette uvicorn python-multipart aiohttp
 
 ADD threat.py threat.py
-ADD models/threat_model.pth models/threat_model.pth
+# ADD models/threat_model.pth models/threat_model.pth
 
 # Run it once to trigger resnet download
 RUN python threat.py
