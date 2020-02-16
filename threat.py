@@ -63,50 +63,24 @@ async def upload(request):
     return predict_image_from_bytes(bytes)
 
 
-# def predict_from_bytes(bytes):
-#     img = open_image(BytesIO(bytes))
-#     _,_,losses = learn.predict(img)
-#     predictions = sorted(zip(classes, map(float, losses)), key=lambda p: p[1], reverse=True)
-#     result_html1 = path/'static'/'result1.html'
-#     result_html2 = path/'static'/'result2.html'
-    
-#     result_html = str(result_html1.open().read() +str(predictions[0:3]) + result_html2.open().read())
-#     return HTMLResponse(result_html)
-
-
 @app.route("/classify-url", methods=["GET"])
 async def classify_url(request):
     bytes = await get_bytes(request.query_params["url"])
     return predict_image_from_bytes(bytes)
 
-
 def predict_image_from_bytes(bytes):
     img = open_image(BytesIO(bytes))
-    _,class_,losses = threat_learner.predict(img)
-
-    print({
-        "prediction": classes[class_.item()],
-        "scores": sorted(
+    _, class_, losses = threat_learner.predict(img)
+    pred=sorted(
             zip(threat_learner.data.classes, map(float, losses)),
-            key=lambda p: p[1],
-            reverse=True
+            key=lambda p: p[1]
         )
-    })
 
-    prediction=sorted(
-            zip(threat_learner.data.classes, map(float, losses)),
-            key=lambda p: p[1], reverse=True)
-    
-    print(prediction)
-    return HTMLResponse(
-        """ <h1>It's a """+prediction[0][0]+"""</h1>""")
+    return HTMLResponse("""
+        <h3>The image shows a """+str(pred[0][0])+"""<h3>
+    """)
 
-# @app.route("/")
-# def form(request):
-#     print(path)
-#     index_html = path/'static'/'index.html'
-#     print(index_html)
-#     return HTMLResponse(index_html.open().read())
+
 
 @app.route("/")
 def form(request):
