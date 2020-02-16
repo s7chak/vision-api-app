@@ -20,16 +20,18 @@ app = Starlette()
 
 path = Path(__file__).parent
 threat_images_path = Path("/tmp")
+classes = ['gun','knife','bomb']
 threat_fnames = [
     "images/{}_1.jpg".format(c)
-    for c in [
-        "gun",
-        "knife",
-        "bomb"
-    ]
+    for c in classes
 ]
-classes = ['gun','knife','bomb']
-model_file_name='threat_model'
+
+# model_file_name='threat_model'
+
+
+
+
+
 
 threat_data = ImageDataBunch.single_from_classes(path, classes, ds_tfms=get_transforms(), size=150).normalize(imagenet_stats)
 # from_name_re(
@@ -39,11 +41,19 @@ threat_data = ImageDataBunch.single_from_classes(path, classes, ds_tfms=get_tran
 #     ds_tfms=get_transforms(),
 #     size=224,
 # )
-threat_learner = cnn_learner(threat_data, models.resnet34)
-threat_learner.load(model_file_name)
+
+# threat_learner = cnn_learner(threat_data, models.resnet34)
+# # threat_learner.load(model_file_name)
 # threat_learner.model.load_state_dict(
 #     torch.load("threat_model.pth", map_location="cpu")['model']
 # )
+
+
+threat_learner = cnn_learner(threat_data, models.resnet34)
+threat_learner.model.load_state_dict(
+    torch.load("threat_model.pth", map_location="cpu")['model']
+)
+
 
 
 @app.route("/upload", methods=["POST"])
@@ -51,6 +61,17 @@ async def upload(request):
     data = await request.form()
     bytes = await (data["file"].read())
     return predict_image_from_bytes(bytes)
+
+
+# def predict_from_bytes(bytes):
+#     img = open_image(BytesIO(bytes))
+#     _,_,losses = learn.predict(img)
+#     predictions = sorted(zip(classes, map(float, losses)), key=lambda p: p[1], reverse=True)
+#     result_html1 = path/'static'/'result1.html'
+#     result_html2 = path/'static'/'result2.html'
+    
+#     result_html = str(result_html1.open().read() +str(predictions[0:3]) + result_html2.open().read())
+#     return HTMLResponse(result_html)
 
 
 @app.route("/classify-url", methods=["GET"])
@@ -74,18 +95,23 @@ def predict_image_from_bytes(bytes):
 
     prediction=sorted(
             zip(threat_learner.data.classes, map(float, losses)),
-            key=lambda p: p[1])
+            key=lambda p: p[1], reverse=True)
     
     print(prediction)
     return HTMLResponse(
         """ <h1>It's a """+prediction[0][0]+"""</h1>""")
 
+# @app.route("/")
+# def form(request):
+#     print(path)
+#     index_html = path/'static'/'index.html'
+#     print(index_html)
+#     return HTMLResponse(index_html.open().read())
 
 @app.route("/")
 def form(request):
-    return HTMLResponse(
-        """
-        <h2>Threat Object Detector<h2>
+    return HTMLResponse("""
+        <h3>This app will classify a hazardous object - gun, knife or a bomb<h3>
         <form action="/upload" method="post" enctype="multipart/form-data">
             Select image to upload:
             <input type="file" name="file">
