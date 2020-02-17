@@ -8,7 +8,7 @@ RUN pip install torch_nightly -f https://download.pytorch.org/whl/nightly/cpu/to
 RUN pip install fastai
 
 # Install starlette and uvicorn
-RUN pip install -r requirements.txt
+RUN pip install starlette uvicorn python-multipart aiohttp aiofiles
 
 ADD threat.py threat.py
 # ADD models/threat_model.pth models/threat_model.pth
