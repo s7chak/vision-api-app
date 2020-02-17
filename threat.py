@@ -84,11 +84,17 @@ def predict_image_from_bytes(bytes):
 
     print(pred)
 
-    return HTMLResponse("""
-        <body>
-        <h3 align="center">The image shows a """+str(pred[0][0])+"""<h3>
-        </body>
-    """)
+    result_html1 = path/'static'/'result1.html'
+    result_html2 = path/'static'/'result2.html'
+    
+    result_html = str(result_html1.open().read() +"It's a "+pred[0][0] + result_html2.open().read())
+    return HTMLResponse(result_html)
+
+    # return HTMLResponse("""
+    #     <body>
+    #     <h3 align="center">The image shows a """+str(pred[0][0])+"""<h3>
+    #     </body>
+    # """)
 
 
 
