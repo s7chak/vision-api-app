@@ -5,35 +5,35 @@
 
 <!--===============================================================================================-->
 <!--===============================================================================================-->
-	<link rel="icon" type="image/png" href="../static/images/icons/favicon.ico"/>
+	<link rel="icon" type="image/png" href="static/images/icons/favicon.ico"/>
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../static/vendor/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="static/vendor/bootstrap/css/bootstrap.min.css">
 <!--===============================================================================================-->
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../static/vendor/animate/animate.css">
+	<link rel="stylesheet" type="text/css" href="static/vendor/animate/animate.css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../static/vendor/css-hamburgers/hamburgers.min.css">
+	<link rel="stylesheet" type="text/css" href="static/vendor/css-hamburgers/hamburgers.min.css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../static/vendor/animsition/css/animsition.min.css">
+	<link rel="stylesheet" type="text/css" href="static/vendor/animsition/css/animsition.min.css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" hrexf="../static/vendor/select2/select2.min.css">
+	<link rel="stylesheet" type="text/css" hrexf="static/vendor/select2/select2.min.css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../static/vendor/daterangepicker/daterangepicker.css">
+	<link rel="stylesheet" type="text/css" href="static/vendor/daterangepicker/daterangepicker.css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../static/css/util.css">
-	<link rel="stylesheet" type="text/css" href="../static/css/main.css">
+	<link rel="stylesheet" type="text/css" href="static/css/util.css">
+	<link rel="stylesheet" type="text/css" href="static/css/main.css">
 <!--===============================================================================================-->
 </head>
 <body>
 	<div class="container-contact100">
 		<div class="wrap-contact100">
-			<a href="/"><img height="42" width="42" src="../static/images/25694.png" ></a>
+			<a href="/" align="center"><img height="45" width="42" src="static/images/eye.png" ></a>
 			<span class="contact100-form-title">What kind of Threat?</span>
 			<form class="contact100-form validate-form" action="/upload" method="post" enctype="multipart/form-data">
 				<div class="wrap-input100 validate-input" data-validate = "Valid image file is required: jpg or png">
 					<span class="label-input100">Select Only One Image File</span>
 					<input id="inp_file" type="file" name="file" >
-					<!-- <input id="inp_img" type="hidden" name="img" value=""> -->
+					<input id="inp_img" type="hidden" name="img" value="">
 					<span class="focus-input100"></span>
 				</div>
 				<div>
@@ -52,15 +52,20 @@
 				</div>
 
 			</form>
-			<div class="wrap-input100 validate-input" data-validate = "Valid image file is required: jpg or png">
-					<span class="label-input100">Or submit a URL:</span>
+			<!-- <div class="wrap-input100 validate-input" data-validate = "Valid image file is required: jpg or png"> -->
+			<span class="label-input100"><h5>Or submit a URL</h5></span><br>
 	        <form action="/classify-url" method="get">
-	            <input type="url" name="url">
-	            <input type="submit" value="Fetch and analyze image">
+				<div class="wrap-input100 validate-input" data-validate = "Valid image file is required: jpg or png" width="35">
+					<span class="label-input100" width="35">Select a valid URL of one image and press Enter</span><br><br>
+					<input type="url" name="url" width="50">
+				</div>
+				<!-- <div>
+					<img id='image-picked' class='no-display'>
+				</div> -->
 	        </form>
-	        </div>
+	        <!-- </div> -->
 		</div>
 	</div>
-<script src="../static/js/utility.js"></script>
+<script src="static/js/utility.js"></script>
 </body>
 </html>
